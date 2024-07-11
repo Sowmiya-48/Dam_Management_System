@@ -1,0 +1,111 @@
+import java.util.Scanner;
+
+class Dam {
+    String name;
+    double storage;
+    double inflow;
+    double outflow;
+    double threshold;
+
+    Dam(String name, double storage, double inflow, double outflow, double threshold) {
+        this.name = name;
+        this.storage = storage;
+        this.inflow = inflow;
+        this.outflow = outflow;
+        this.threshold = threshold;
+    }
+
+    void checkStatus() {
+        if (storage > threshold) {
+            System.out.println("Danger: " + name + " storage is exceeding threshold. Increase outflow!");
+        } else {
+            System.out.println(name + " is stable.");
+        }
+    }
+
+    boolean isValidDamName(String name) {
+        return name.equals("Dam1") || name.equals("Dam2") || name.equals("Dam3") || name.equals("Dam4") || name.equals("Dam5");
+    }
+
+    void increaseOutflow(double newOutflow) {
+        outflow = newOutflow;
+        System.out.println("Outflow for " + name + " updated successfully!");
+        checkStatus();
+    }
+}
+
+public class DamManagementSystem {
+    private static Dam[] dams = {
+        new Dam("Dam1", 100, 50, 30, 800),
+        new Dam("Dam2", 1500, 40, 35, 1200),
+        new Dam("Dam3", 1400, 60, 45, 1600),
+        new Dam("Dam4", 1200, 45, 30, 1000),
+        new Dam("Dam5", 1800, 55, 40, 1400)
+    };
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Admin Login");
+        System.out.println("------------------------------------");
+        System.out.print("Enter username: ");
+        String username = scanner.nextLine();
+        System.out.print("Enter password: ");
+        String password = scanner.nextLine();
+
+        if (username.equals("Admin") && password.equals("DamAd")) {
+            System.out.println("Admin login successful!");
+            boolean running = true;
+            while (running) {
+                System.out.println("\nSelect an option:");
+                System.out.println("1. View dam status");
+                System.out.println("2. Increase outflow");
+                System.out.println("3. Exit\n");
+
+                int option = scanner.nextInt();
+                switch (option) {
+                    case 1:
+                        viewDamStatus();
+                        break;
+                    case 2:
+                        increaseOutflow(scanner);
+                        break;
+                    case 3:
+                        System.out.println("Exiting program...");
+                        running = false;
+                        break;
+                    default:
+                        System.out.println("Invalid option");
+                }
+            }
+        } else {
+            System.out.println("Invalid credentials");
+        }
+
+        scanner.close();
+    }
+
+    private static void viewDamStatus() {
+        for (Dam dam : dams) {
+            dam.checkStatus();
+        }
+    }
+
+    private static void increaseOutflow(Scanner scanner) {
+        System.out.println("Enter dam name to increase outflow: ");
+        String damName = scanner.next();
+        boolean damFound = false;
+        for (Dam dam : dams) {
+            if (dam.isValidDamName(damName)) {
+                System.out.print("Enter new outflow for " + damName + ": ");
+                double newOutflow = scanner.nextDouble();
+                dam.increaseOutflow(newOutflow);
+                damFound = true;
+                break;
+            }
+        }
+        if (!damFound) {
+            System.out.println("Invalid Dam Name");
+        }
+    }
+}
+ 
